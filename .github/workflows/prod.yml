@@ -25,4 +25,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: 100xdevs/next-app:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME}}/next-app:${{ github.sha }}
