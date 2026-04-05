@@ -26,3 +26,16 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME}}/next-app:${{ github.sha }}
+
+      - name: Clone staging-ops repo, update, and push
+        env:
+            PAT: ${{ secrets.PAT }}
+        run: |
+            git clone https://github.com/Aa5hut0sh/argo-deployment.git
+            cd argo-deployment
+            sed -i 's|image: ${{ secrets.DOCKERHUB_USERNAME}}/next-app:.*|image: ${{ secrets.DOCKERHUB_USERNAME}}/next-app:${{ github.sha }}|' manifest.yml
+            git config user.name "GitHub Actions Bot"
+            git config user.email "actions@github.com"
+            git add .
+            git commit -m "Update image to ${{ github.sha }}"
+            git push https://${PAT}@github.com/Aa5hut0sh/argo-deployment.git main
